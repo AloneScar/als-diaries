@@ -18,7 +18,7 @@ def show_page(title):
     # print(item.content)
     with open(item.content_url, "r", encoding='utf-8') as f:
         content = f.read()
-    print(content)
+    # print(content)
     return render_template('show.html', title=item.title, content=content)
 
 @app.route('/edit/<title>', methods=['GET', 'POST'])
@@ -37,7 +37,7 @@ def edit_page(title):
         except Exception as e:
             print(e)
             return 'fail'
-    print(title)
+    # print(title)
     item = Item.query.filter(Item.title == title).first()
     with open(item.content_url, "r", encoding='utf-8') as f:
         content = f.read()
@@ -66,7 +66,7 @@ def commit_page(title):
             content_url = str(Path(__file__).parent.joinpath('templates', 'data', title+'.html'))
             with open(content_url, "w", encoding='utf-8') as f:
                 f.write(content)
-            print(content_url)
+            # print(content_url)
             item = Item(title=title, content_url=content_url)
             db.session.add(item)
             db.session.commit()
