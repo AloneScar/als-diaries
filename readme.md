@@ -1,2 +1,6 @@
 # How To Use It
-> python run.py
+假设你在diaries目录下
+cd ./diary/static/
+npm i
+cd ../../
+python run.py
