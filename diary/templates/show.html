@@ -34,11 +34,9 @@
 <main>
     <blockquote>
         <p style="text-align: center;">
-            {% block title %}
-            {% endblock %}
+            {{ title }}
         </p>
-            {% block content %}
-            {% endblock %}
+        {{ content | safe }}
     </blockquote>
 </main>
 <button onclick="javascript:window.location.href = '/'">Home</button>

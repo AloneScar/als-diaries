@@ -7,7 +7,7 @@
         <button class="btns" onclick="commit()">Commit</button>
     </div>
     <div id="div1">
-        <p>你来啦！😋</p>
+        {{ content | safe }}
     </div>
 
     <!-- 引入 wangEditor.min.js -->
@@ -17,7 +17,7 @@
         const editor = new E('#div1')
         editor.config.height = 550
         editor.create()
-        var title = "{{ timeNow }}";
+        var title = "{{ title }}";
         function commit() {
             swal({
                 title: "Type your title",
@@ -33,9 +33,13 @@
                 if (inputValue !== "") {
                     title = inputValue;
                 }
-                data = {content: editor.txt.html(), title: title};
+                var data = {content: editor.txt.html()};
+                var url = '/commit/' + title;
+                {% if 'edit' == URL %}
+                    url = '/edit/' + title;
+                {% endif %} 
                 $.post({
-                    url: '/commit', data: data, success: (rel) => {
+                    url: url, data: data, success: (rel) => {
                         if (rel == "success") {
                                 swal("Nice!", "You diary: " + title, "success").then(() => { window.location.href = '/' });
                         } else {
