@@ -1,0 +1,44 @@
+<style>
+    body, main::before{
+        background: url("{{ url_for('static', filename='imgs/show.png') }}") 0 / cover fixed;
+    }
+    main{
+        position: absolute;
+        top: 0; bottom: 0;
+        left: 0; right: 0;
+        width: 900px;
+        height: 100%;
+        line-height: 2;
+        margin: auto;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        background: rgba(255, 255, 255, .3);
+        box-shadow: 3px 3px 6px 3px rgba(0, 0, 0, .3);
+        overflow: hidden;
+        overflow-y: auto;
+    }
+    main::before{
+        content: '';
+        position: absolute;
+        top: 0; bottom: 0;
+        left: 0; right: 0;
+        filter: blur(20px);
+        z-index: -1;
+        margin: -30px;
+    }
+    ::-webkit-scrollbar {
+        display: none; /* Chrome Safari */
+    }
+
+</style>
+<main>
+    <blockquote>
+        <p style="text-align: center;">
+            {% block title %}
+            {% endblock %}
+        </p>
+            {% block content %}
+            {% endblock %}
+    </blockquote>
+</main>
+<button onclick="javascript:window.location.href = '/'">Home</button>

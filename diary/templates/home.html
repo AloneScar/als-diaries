@@ -1,0 +1,32 @@
+{% extends 'base.html' %} <!--继承base.html，他有啥的这里面也有，他没有的，这里面还有-->
+{% block title %}
+    Home Page
+{% endblock %}
+{% block content %}
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+                <!-- Your Columns HERE -->
+                <th scope="col">Id</th>
+                <th scope="col">Title</th>
+                <th scope="col">Date_Created</th>
+                <th scope="col">Date_Last_commited</th>
+                <th scope="col">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td><a href="/diary/{{ item.id }}">{{ item.title }}</a></td>
+                    <td>{{ item.date_created }}</td>
+                    <td>{{ item.date_last_commited }}</td>
+                    <td>
+                        <button class="btn btn-outline btn-info">Edit</button>
+                        <button class="btn btn-outline btn-success">Delete</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

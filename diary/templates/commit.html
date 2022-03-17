@@ -1,0 +1,68 @@
+{% extends 'base.html' %} <!--继承base.html，他有啥的这里面也有，他没有的，这里面还有-->
+{% block title %}
+    Commit Page
+{% endblock %}
+{% block content %}
+    <div id="div0">
+        <button class="btns" onclick="commit()">Commit</button>
+    </div>
+    <div id="div1">
+        <p>你来啦！😋</p>
+    </div>
+
+    <!-- 引入 wangEditor.min.js -->
+    <script src="{{url_for('static', filename='node_modules/wangEditor/dist/wangEditor.min.js')}}"></script>
+    <script>
+        const E = window.wangEditor
+        const editor = new E('#div1')
+        editor.config.height = 550
+        editor.create()
+        var title = "{{ timeNow }}";
+        function commit() {
+            swal({
+                title: "Type your title",
+                content: {
+                    element: "input",
+                    attributes: {
+                    placeholder: title,
+                    type: "text",
+                    },
+                },
+            }).then((inputValue) => {
+                if (inputValue === false) return false;
+                if (inputValue !== "") {
+                    title = inputValue;
+                }
+                data = {content: editor.txt.html(), title: title};
+                $.post({
+                    url: '/commit', data: data, success: (rel) => {
+                        if (rel == "success") {
+                                swal("Nice!", "You diary: " + title, "success").then(() => { window.location.href = '/' });
+                        } else {
+
+                            swal('404 Not Found', 'Fail To Commit!!!', 'error');
+                        }
+                    }
+                })
+            })
+        }
+    </script>
+    <style>
+        #div1 {
+            color: black;
+        }
+        #div0 {
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+        .btns {
+            margin: 5px;
+            background-color: black;
+            color: white;
+            border: 2px solid white;
+            border-radius: 6px;
+            text-align: center;
+        }
+    </style>
+{% endblock %}

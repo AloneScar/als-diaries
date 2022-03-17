@@ -1,0 +1,5 @@
+/diary/static/data/
+/diary/static/node_modules/
+/diary/diary.db
+/__pycache__/
+/diary/__pycache__/
