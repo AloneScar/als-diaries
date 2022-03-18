@@ -16,7 +16,8 @@ def home_page():
 def show_page(title):
     item = Item.query.filter(Item.title == title).first()
     # print(item.content)
-    with open(item.content_url, "r", encoding='utf-8') as f:
+    content_url = str(Path(__file__).parent.joinpath('templates', 'data', title + '.html'))
+    with open(content_url, "r", encoding='utf-8') as f:
         content = f.read()
     # print(content)
     return render_template('show.html', title=item.title, content=content)
@@ -26,12 +27,15 @@ def edit_page(title):
     if request.method == 'POST':
         content = request.form.get('content')
         try:
-            item = Item.query.filter(Item.title == title).first()
-            Path(item.content_url).unlink()
-            content_url = str(Path(__file__).parent.joinpath('templates', 'data', title+'.html'))
-            item.content_url = content_url
+            title_old = request.form.get('title')
+            item = Item.query.filter(Item.title == title_old).first()
+            content_url = str(Path(__file__).parent.joinpath('templates', 'data', title_old +'.html'))
+            Path(content_url).unlink()
+            item.title = title
+            item.date_last_commited = datetime.utcnow()
             db.session.commit()
-            with open(item.content_url, "w", encoding='utf-8') as f:
+            content_url = str(Path(__file__).parent.joinpath('templates', 'data', title +'.html'))
+            with open(content_url, "w", encoding='utf-8') as f:
                 f.write(content)
             return 'success'
         except Exception as e:
@@ -39,7 +43,8 @@ def edit_page(title):
             return 'fail'
     # print(title)
     item = Item.query.filter(Item.title == title).first()
-    with open(item.content_url, "r", encoding='utf-8') as f:
+    content_url = str(Path(__file__).parent.joinpath('templates', 'data', title +'.html'))
+    with open(content_url, "r", encoding='utf-8') as f:
         content = f.read()
     return render_template('commit.html', title=item.title, content=content, URL='edit')
 
@@ -49,7 +54,8 @@ def delete_page():
         title = request.form.get('title')
         try:
             item = Item.query.filter(Item.title == title).first()
-            Path(item.content_url).unlink()
+            content_url = str(Path(__file__).parent.joinpath('templates', 'data', title +'.html'))
+            Path(content_url).unlink()
             # print(item)
             db.session.delete(item)
             db.session.commit()
@@ -67,7 +73,7 @@ def commit_page(title):
             with open(content_url, "w", encoding='utf-8') as f:
                 f.write(content)
             # print(content_url)
-            item = Item(title=title, content_url=content_url)
+            item = Item(title=title)
             db.session.add(item)
             db.session.commit()
             return 'success'

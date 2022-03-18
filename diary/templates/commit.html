@@ -17,14 +17,15 @@
         const editor = new E('#div1')
         editor.config.height = 550
         editor.create()
-        var title = "{{ title }}";
+        var title_old = "{{ title }}";
+        var title;
         function commit() {
             swal({
                 title: "Type your title",
                 content: {
                     element: "input",
                     attributes: {
-                    placeholder: title,
+                    placeholder: title_old,
                     type: "text",
                     },
                 },
@@ -32,8 +33,10 @@
                 if (inputValue === false) return false;
                 if (inputValue !== "") {
                     title = inputValue;
+                } else {
+                    title = title_old;
                 }
-                var data = {content: editor.txt.html()};
+                var data = {content: editor.txt.html(), title: title_old};
                 var url = '/commit/' + title;
                 {% if 'edit' == URL %}
                     url = '/edit/' + title;

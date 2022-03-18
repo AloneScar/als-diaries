@@ -8,7 +8,6 @@ class Item(db.Model):
     title = db.Column(db.String(), primary_key=True, nullable=False, unique=True)
     date_created = db.Column(db.DateTime(), default=datetime.utcnow)
     date_last_commited  = db.Column(db.DateTime(), default=datetime.utcnow)
-    content_url = db.Column(db.String())
 
 
     def __repr__(self):
