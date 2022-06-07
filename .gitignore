@@ -3,3 +3,5 @@
 /diary/diary.db
 /__pycache__/
 /diary/__pycache__/
+/.idea/
+/test/
