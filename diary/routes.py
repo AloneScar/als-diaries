@@ -16,7 +16,7 @@ def home_page():
 def show_page(title):
     item = Item.query.filter(Item.title == title).first()
     # print(item.content)
-    content_url = str(Path(__file__).parent.joinpath('templates', 'data', title + '.html'))
+    content_url = str(Path(__file__).parent.joinpath('templates', 'data', title + '.md'))
     with open(content_url, "r", encoding='utf-8') as f:
         content = f.read()
     # print(content)
@@ -30,24 +30,25 @@ def edit_page(title):
         try:
             title_old = request.form.get('title')
             item = Item.query.filter(Item.title == title_old).first()
-            content_url = str(Path(__file__).parent.joinpath('templates', 'data', title_old + '.html'))
+            content_url = str(Path(__file__).parent.joinpath('templates', 'data', title_old + '.md'))
             Path(content_url).unlink()
             item.title = title
             item.date_last_commited = datetime.utcnow()
             db.session.commit()
-            content_url = str(Path(__file__).parent.joinpath('templates', 'data', title + '.html'))
+            content_url = str(Path(__file__).parent.joinpath('templates', 'data', title + '.md'))
             with open(content_url, "w", encoding='utf-8') as f:
                 f.write(content)
             return 'success'
         except Exception as e:
             print(e)
             return 'fail'
-    # print(title)
-    item = Item.query.filter(Item.title == title).first()
-    content_url = str(Path(__file__).parent.joinpath('templates', 'data', title + '.html'))
-    with open(content_url, "r", encoding='utf-8') as f:
-        content = f.read()
-    return render_template('commit.html', title=item.title, content=content, URL='edit')
+    else:
+        # print(title)
+        item = Item.query.filter(Item.title == title).first()
+        content_url = str(Path(__file__).parent.joinpath('templates', 'data', title + '.md'))
+        with open(content_url, "r", encoding='utf-8') as f:
+            content = f.read()
+        return render_template('commit.html', title=item.title, content=content, URL='edit')
 
 
 @app.route('/delete', methods=['GET', 'POST'])
@@ -56,7 +57,7 @@ def delete_page():
         title = request.form.get('title')
         try:
             item = Item.query.filter(Item.title == title).first()
-            content_url = str(Path(__file__).parent.joinpath('templates', 'data', title + '.html'))
+            content_url = str(Path(__file__).parent.joinpath('templates', 'data', title + '.md'))
             Path(content_url).unlink()
             # print(item)
             db.session.delete(item)
@@ -72,7 +73,7 @@ def commit_page(title):
     if request.method == 'POST':
         content = request.form.get('content')
         try:
-            content_url = str(Path(__file__).parent.joinpath('templates', 'data', title + '.html'))
+            content_url = str(Path(__file__).parent.joinpath('templates', 'data', title + '.md'))
             with open(content_url, "w", encoding='utf-8') as f:
                 f.write(content)
             # print(content_url)
@@ -84,5 +85,5 @@ def commit_page(title):
             print(e)
             return 'fail'
     else:
-        return render_template('commit.html', title=datetime.now().strftime("%Y-%m-%d"), content='<p>你来啦！😋</p>',
+        return render_template('commit.html', title=datetime.now().strftime("%Y-%m-%d"), content='**你来啦！😋** \n\n\n',
                                URL='commit')

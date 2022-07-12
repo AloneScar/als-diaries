@@ -3,22 +3,27 @@
     Commit Page
 {% endblock %}
 {% block content %}
-    <div id="div0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='/node_modules/editor.md/css/editormd.min.css') }}" />
+    <script src="{{ url_for('static', filename='node_modules/jquery/dist/jquery.min.js') }}"></script>
+    <div id="btnCommit">
         <button class="btns" onclick="commit()">Commit</button>
     </div>
-    <div id="div1">
-        {{ content | safe }}
+    <div id="editor">
     </div>
 
-    <!-- 引入 wangEditor.min.js -->
-    <script src="{{url_for('static', filename='node_modules/wangEditor/dist/wangEditor.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='/node_modules/editor.md/editormd.min.js') }}"></script>
     <script>
-        const E = window.wangEditor
-        const editor = new E('#div1')
-        editor.config.height = 550
-        editor.create()
-        var title_old = "{{ title }}";
-        var title;
+        var editor = editormd("editor", {
+            width: "100%",
+            autoHeight: true,
+            emoji: true,
+            markdown: `{{ content | safe }}`,     // dynamic set Markdown text
+            path: "{{ url_for('static', filename='/node_modules/editor.md/lib/') }}"  // Autoload modules mode, codemirror, marked... dependents libs path
+        });
+
+        const title_old = "{{ title }}";
+        let title;
+
         function commit() {
             swal({
                 title: "Type your title",
@@ -36,11 +41,11 @@
                 } else {
                     title = title_old;
                 }
-                var data = {content: editor.txt.html(), title: title_old};
-                var url = '/commit/' + title;
+                const data = {content: editor.getMarkdown(), title: title_old};
+                let url = '/commit/' + title;
                 {% if 'edit' == URL %}
                     url = '/edit/' + title;
-                {% endif %} 
+                {% endif %}
                 $.post({
                     url: url, data: data, success: (rel) => {
                         if (rel == "success") {
@@ -58,7 +63,7 @@
         #div1 {
             color: black;
         }
-        #div0 {
+        #btnCommit {
             display:flex;
             justify-content:center;
             align-items:center;

@@ -1,42 +1,47 @@
-<style>
-    body, main::before{
-        background: url("{{ url_for('static', filename='imgs/show.png') }}") 0 / cover fixed;
-    }
-    main{
-        position: absolute;
-        top: 0; bottom: 0;
-        left: 0; right: 0;
-        width: 900px;
-        height: 100%;
-        line-height: 2;
-        margin: auto;
-        margin-top: 0px;
-        margin-bottom: 0px;
-        background: rgba(255, 255, 255, .3);
-        box-shadow: 3px 3px 6px 3px rgba(0, 0, 0, .3);
-        overflow: hidden;
-        overflow-y: auto;
-    }
-    main::before{
-        content: '';
-        position: absolute;
-        top: 0; bottom: 0;
-        left: 0; right: 0;
-        filter: blur(20px);
-        z-index: -1;
-        margin: -30px;
-    }
-    ::-webkit-scrollbar {
-        display: none; /* Chrome Safari */
-    }
-</style>
-<link rel="stylesheet" href="{{ url_for('static', filename='style/wangEditor.css') }}">
-<main>
-    <blockquote>
-        <p style="text-align: center;">
-            {{ title }}
-        </p>
-        {{ content | safe }}
-    </blockquote>
-</main>
-<button onclick="javascript:window.location.href = '/'">Home</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='node_modules/github-markdown-css/github-markdown.css') }}">
+    <style>
+        body {
+            background: url("{{ url_for('static', filename='imgs/show.jpg') }}") 0 / cover fixed;
+        }
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 45px;
+            opacity:0.8;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="markdown-body" id="text-markdown-view">
+    </div>
+    <script src="{{ url_for('static', filename='node_modules/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='node_modules/editor.md/editormd.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='node_modules/editor.md/lib/marked.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='node_modules/editor.md/lib/prettify.min.js') }}"></script>
+    <script type="text/javascript">
+        $(function () {
+            editormd.markdownToHTML("text-markdown-view", {
+                markdown : `{{ content | safe }}`, // Also, you can dynamic set Markdown text
+                htmlDecode : true,  // Enable / disable HTML tag encode.
+                // htmlDecode : "style,script,iframe",  // Note: If enabled, you should filter some dangerous HTML tags for website security.
+            });
+        });
+    </script>
+</body>
+</html>
