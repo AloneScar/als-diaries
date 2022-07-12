@@ -17,18 +17,42 @@
             max-width: 980px;
             margin: 0 auto;
             padding: 45px;
-            opacity:0.8;
+            background-color:rgba(255, 255, 255, 0.8)
         }
-
+        .markdown-body img {
+            width: 10%;
+            height: 10%;
+        }
         @media (max-width: 767px) {
             .markdown-body {
                 padding: 15px;
             }
         }
+       .imgPreview {
+           display: none;
+           top: 0;
+           left: 0;
+           width: 100%; /*容器占满整个屏幕*/
+           height: 100%;
+           position: fixed;
+           background: rgba(0, 0, 0, 0.5);
+       }
+
+        .imgPreview img {
+            z-index: 100;
+            width: 60%;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+        }
     </style>
 </head>
 <body>
     <div class="markdown-body" id="text-markdown-view">
+    </div>
+    <div class="imgPreview">
+        <img src="#" id="imgPreview">
     </div>
     <script src="{{ url_for('static', filename='node_modules/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='node_modules/editor.md/editormd.min.js') }}"></script>
@@ -41,7 +65,15 @@
                 htmlDecode : true,  // Enable / disable HTML tag encode.
                 // htmlDecode : "style,script,iframe",  // Note: If enabled, you should filter some dangerous HTML tags for website security.
             });
-        });
+            $('img').on('click', function () {
+                var src = $(this).attr('src');
+                $('.imgPreview img').attr('src', src);
+                $('.imgPreview').show()
+            });
+            $('.imgPreview').on('click', function () {
+                $('.imgPreview').hide()
+            });
+        })
     </script>
 </body>
 </html>
